@@ -8,6 +8,8 @@ import { execFileSync } from "node:child_process";
 
 export const ROOT = path.resolve(import.meta.dirname, "..");
 export const WIDGETS = path.join(ROOT, "widgets");
+/** Official plugins (FullWidget's own, never submitted): plugins/<id>/ with plugin.json. */
+export const PLUGINS = path.join(ROOT, "plugins");
 
 export const CATEGORIES = ["time", "weather", "system", "productivity", "info", "media"];
 const SIMPLE_PERMISSIONS = ["system", "notify", "audio", "media", "shell.open", "shell.launch"];
@@ -108,6 +110,15 @@ export function checkWidget(folder, { published } = {}) {
       else if (!HOST.test(h)) errors.push(`權限 ${p} 的網址看不懂 / bad host in ${p}`);
       continue;
     }
+    if (p.startsWith("plugin:")) {
+      // only the official plugins in this market; a plugin of your own stays on your PC
+      const id = p.slice(7);
+      if (!id.startsWith("fullwidget.") || !fs.existsSync(path.join(PLUGINS, id, "plugin.json")))
+        errors.push(`${p}：市場上的組件只能用這裏的官方插件（plugins/ 裏的 fullwidget.*）/ market widgets may only use the official plugins in plugins/`);
+      else warnings.push(`需要官方插件 ${id} / needs the official plugin ${id}`);
+      continue;
+    }
+    if (p === "shell.run") { errors.push("shell.run 只給用戶自己寫的組件，市場不收 / shell.run is only for widgets people write for themselves"); continue; }
     errors.push(`FullWidget 不認識的權限「${p}」/ unknown permission`);
   }
   if ((perms || []).includes("shell.launch")) warnings.push("⚠ shell.launch：可以打開電腦上的程式和檔案 / may open programs and files");
@@ -145,6 +156,41 @@ export function checkWidget(folder, { published } = {}) {
     errors.push(`版本要比市場上的 ${published} 新 / the version must be higher than ${published}`);
   if (published && published === m.version) r.unchangedVersion = true;
   return r;
+}
+
+// a plugin is source code that FullWidget runs: scripts and text, nothing prebuilt
+const PLUGIN_FILES = new Set([".json", ".md", ".txt", ".ps1", ".psm1", ".cs", ".py", ".js", ".mjs"]);
+
+/** Reviews one official plugin folder: { id, manifest, files, errors, warnings }. */
+export function checkPlugin(folder, { published } = {}) {
+  const dir = path.join(PLUGINS, folder);
+  const errors = [], warnings = [];
+  const r = { folder, id: folder, manifest: null, files: [], errors, warnings };
+  if (!folder.startsWith("fullwidget.") || !ID.test(folder)) errors.push("官方插件的資料夾要叫 fullwidget.<名稱> / official plugins are named fullwidget.<name>");
+  const file = path.join(dir, "plugin.json");
+  if (!fs.existsSync(file)) { errors.push("沒有 plugin.json / plugin.json is missing"); return r; }
+  let m;
+  try { m = parseJsonc(fs.readFileSync(file, "utf8")); }
+  catch (e) { errors.push(`plugin.json 格式有誤 / is not valid JSON: ${e.message}`); return r; }
+  r.manifest = m;
+  if (!pick(m.name)) errors.push("缺少 name / name is missing");
+  if (!pick(m.description)) warnings.push("沒有 description / no description");
+  if (typeof m.version !== "string" || !VERSION.test(m.version)) errors.push(`version「${m.version}」要像 1.0.0 / version must look like 1.0.0`);
+  if (typeof m.run !== "string" || !m.run.trim()) errors.push("缺少 run：怎樣啟動它 / run is missing");
+  const files = r.files = listFiles(dir);
+  for (const f of files) {
+    if (f.link) errors.push(`${f.rel}：不能用捷徑或符號連結 / links are not allowed`);
+    if (!PLUGIN_FILES.has(path.extname(f.rel).toLowerCase())) errors.push(`${f.rel}：插件只放原始碼和文字檔 / plugins hold source and text only`);
+  }
+  if (files.reduce((s, f) => s + (f.bytes || 0), 0) > 1024 * 1024) errors.push("太大（最多 1 MB）/ too large");
+  if (published && m.version && published !== m.version && compareVersions(m.version, published) <= 0)
+    errors.push(`版本要比市場上的 ${published} 新 / the version must be higher than ${published}`);
+  if (published && published === m.version) r.unchangedVersion = true;
+  return r;
+}
+
+export function pluginFolders() {
+  return fs.existsSync(PLUGINS) ? fs.readdirSync(PLUGINS, { withFileTypes: true }).filter((e) => e.isDirectory() && !e.name.startsWith(".")).map((e) => e.name).sort() : [];
 }
 
 export function widgetFolders() {

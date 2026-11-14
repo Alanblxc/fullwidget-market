@@ -37,6 +37,15 @@ const WORDS = {
   "INSTALL_HINT": ["在 FullWidget 控制中心 →「添加組件」→「線上」可以直接安裝。", "在 FullWidget 控制中心 →「添加组件」→「在线」可以直接安装。", "Or install it straight from the FullWidget Control Center: Add widgets → Online."],
   "需要 FullWidget 1.1.0 以上": ["需要 FullWidget 1.1.0 以上", "Needs FullWidget 1.1.0 or later"],
   "關閉": ["关闭", "Close"],
+  "官方插件": ["官方插件", "Official plugins"],
+  "官方": ["官方", "Official"],
+  "OFFICIAL_SUB": ["FullWidget 自己做的插件，讓組件拿到網頁拿不到的資料。只收官方的，原始碼都公開，在 FullWidget 1.4.0 以上的控制中心安裝。", "FullWidget 自己做的插件，让组件拿到网页拿不到的数据。只收官方的，源代码都公开，在 FullWidget 1.4.0 以上的控制中心安装。", "FullWidget's own plugins, which give widgets data a web page can't reach. Official ones only, source in the open; install them from the Control Center of FullWidget 1.4.0 or later."],
+  "在你的電腦上運行": ["在你的电脑上运行", "Runs on your PC"],
+  "PLUGIN_HINT": ["在 FullWidget 控制中心 →「添加組件」→「線上」→「官方插件」安裝（需要 1.4.0 以上）。插件會用你的身份在電腦上運行，組件用到它時才啟動。", "在 FullWidget 控制中心 →“添加组件”→“在线”→“官方插件”安装（需要 1.4.0 以上）。插件会用你的身份在电脑上运行，组件用到它时才启动。", "Install it in the FullWidget Control Center: Add widgets → Online → Official plugins (1.4.0 or later). It runs as you on your PC, starting only when a widget uses it."],
+  "用到它的組件": ["用到它的组件", "Widgets that use it"],
+  "使用官方插件「{n}」": ["使用官方插件“{n}”", "Use the official plugin \"{n}\""],
+  "讀取這個官方插件提供的資料。插件要另外安裝。": ["读取这个官方插件提供的数据。插件要另外安装。", "Reads what this official plugin provides. The plugin is installed separately."],
+  "需要 FullWidget 1.4.0 以上": ["需要 FullWidget 1.4.0 以上", "Needs FullWidget 1.4.0 or later"],
   // permissions
   "讀取系統資訊": ["读取系统信息", "Read system info"], "處理器、記憶體、網速、磁碟和電池的使用情況。": ["处理器、内存、网速、磁盘和电池的使用情况。", "CPU, memory, network speed, drives and battery."],
   "顯示通知": ["显示通知", "Show notifications"], "在螢幕角落彈出 Windows 通知。": ["在屏幕角落弹出 Windows 通知。", "Pops up Windows notifications."],
@@ -75,6 +84,11 @@ function permInfo(p) {
   if (p === "media") return { name: t("媒體播放"), title: t("讀取和控制正在播放的媒體"), desc: t("看到正在播放的歌名和封面，可以播放、暫停和切換曲目。") };
   if (p === "shell.open") return { name: t("打開網址"), title: t("打開網址"), desc: t("用你的瀏覽器打開網頁或郵件連結。") };
   if (p === "shell.launch") return { name: t("打開程式"), title: t("打開程式和檔案"), desc: t("打開你電腦上的程式、資料夾和檔案。只在你信任這個組件時安裝。"), warn: true };
+  if (p.startsWith("plugin:")) {
+    const pl = data && (data.plugins || []).find((x) => x.id === p.slice(7));
+    const n = pl ? pick(pl.name) : p.slice(7);
+    return { name: `${t("官方插件")} ${n}`, title: t("使用官方插件「{n}」", { n }), desc: t("讀取這個官方插件提供的資料。插件要另外安裝。"), plugin: p.slice(7) };
+  }
   const h = p.slice(8);
   if (h === "*") return { name: t("任何網站"), title: t("連到任何網站"), desc: t("可以和任何網站收發資料。"), warn: true };
   return { name: h, title: t("連到 {h}", { h }), desc: t("和這個網站收發資料。") };
@@ -113,6 +127,16 @@ function card(w) {
   </article>`;
 }
 
+const PLUG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3v5M15 3v5M6.5 8h11v3.5a5.5 5.5 0 0 1-11 0z"/><path d="M12 17v4"/></svg>';
+
+function pluginCard(p) {
+  return `<article class="card plugin" tabindex="0" data-plugin="${esc(p.id)}">
+    <div class="p-top"><span class="p-icon">${PLUG}</span><div><h3>${esc(pick(p.name))}</h3><div class="by"><span class="badge">${esc(t("官方"))}</span> <span class="num">v${esc(p.version)}</span></div></div></div>
+    <p>${esc(pick(p.description))}</p>
+    <div class="perms"><span class="perm">${esc(t("在你的電腦上運行"))} <code>${esc(p.run)}</code></span></div>
+  </article>`;
+}
+
 function render() {
   document.documentElement.lang = lang === "en" ? "en" : lang === "zh-CN" ? "zh-Hans" : "zh-Hant";
   document.title = `FullWidget ${t("組件市場")}`;
@@ -127,7 +151,12 @@ function render() {
   document.querySelectorAll(".langs button").forEach((b) => b.classList.toggle("on", b.dataset.lang === lang));
   $("themes").innerHTML = THEMES.map(([id, n]) => `<button data-theme="${id}" class="${theme === id ? "on" : ""}">${esc(t(n))}</button>`).join("");
 
+  $("t-official").textContent = t("官方插件");
+  $("t-official-sub").textContent = t("OFFICIAL_SUB");
   if (!data) return;
+  const plugins = (data.plugins || []).filter((p) => !query.trim() || `${p.id} ${JSON.stringify(p.name)} ${JSON.stringify(p.description)}`.toLowerCase().includes(query.trim().toLowerCase()));
+  $("official").hidden = !plugins.length || !!cat;
+  $("plugins").innerHTML = plugins.map(pluginCard).join("");
   const all = data.widgets;
   const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   const text = (w) => [w.id, w.author, ...Object.values(typeof w.name === "object" ? w.name : { x: w.name }), ...Object.values(typeof w.description === "object" ? w.description : { x: w.description })].join(" ").toLowerCase();
@@ -162,11 +191,37 @@ function openDetail(id) {
       <div class="d-actions">
         <a class="btn primary" href="${esc(w.package)}" download><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>${esc(t("下載 .fwz"))}</a>
         <a class="btn" href="${REPO}/tree/main/widgets/${encodeURIComponent(w.id)}" target="_blank" rel="noopener">${esc(t("原始碼"))}</a>
-        <span class="d-hint">${esc(t("INSTALL_HINT"))} ${esc(t("需要 FullWidget 1.1.0 以上"))}</span>
+        <span class="d-hint">${esc(t("INSTALL_HINT"))} ${esc(t(w.permissions.some((p) => p.startsWith("plugin:")) ? "需要 FullWidget 1.4.0 以上" : "需要 FullWidget 1.1.0 以上"))}</span>
       </div>
     </div>`;
   if (!$("detail").open) $("detail").showModal();
   history.replaceState(null, "", `#${encodeURIComponent(w.id)}`);
+}
+
+function openPlugin(id) {
+  const p = data && (data.plugins || []).find((x) => x.id === id);
+  if (!p) return;
+  const users = data.widgets.filter((w) => w.permissions.includes(`plugin:${p.id}`));
+  $("detail").innerHTML = `
+    <div class="d-head"><span class="p-icon big">${PLUG}</span><div><h2>${esc(pick(p.name))}</h2><div class="by"><span class="badge">${esc(t("官方"))}</span> <span class="num">${esc(p.id)} · v${esc(p.version)}</span></div></div>
+      <button class="d-close" data-close aria-label="${esc(t("關閉"))}">×</button></div>
+    <div class="d-body">
+      <p>${esc(pick(p.description))}</p>
+      <div><h3 class="d-label">${esc(t("在你的電腦上運行"))}</h3><pre class="cmd">${esc(p.run)}</pre></div>
+      ${users.length ? `<div><h3 class="d-label">${esc(t("用到它的組件"))}</h3><div class="perms">${users.map((w) => `<button class="perm link" data-open="${esc(w.id)}">${esc(pick(w.name))}</button>`).join("")}</div></div>` : ""}
+      <dl class="facts">
+        <div><dt>${esc(t("版本"))}</dt><dd class="num">${esc(p.version)}</dd></div>
+        <div><dt>${esc(t("更新"))}</dt><dd>${esc(day(p.updated))}</dd></div>
+        <div><dt>${esc(t("大小"))}</dt><dd class="num">${esc(kb(p.bytes))} · ${p.files} ${esc(t("檔案"))}</dd></div>
+        <div><dt>SHA-256</dt><dd class="num" title="${esc(p.sha256)}">${esc(p.sha256.slice(0, 16))}…</dd></div>
+      </dl>
+      <div class="d-actions">
+        <a class="btn primary" href="${REPO}/tree/main/${esc(p.source)}" target="_blank" rel="noopener">${esc(t("原始碼"))}</a>
+        <span class="d-hint">${esc(t("PLUGIN_HINT"))}</span>
+      </div>
+    </div>`;
+  if (!$("detail").open) $("detail").showModal();
+  history.replaceState(null, "", `#plugin-${encodeURIComponent(p.id)}`);
 }
 
 async function load() {
@@ -178,7 +233,8 @@ async function load() {
     data.widgets.sort((a, b) => b.updated.localeCompare(a.updated));
     render();
     const id = decodeURIComponent(location.hash.slice(1));
-    if (id) openDetail(id);
+    if (id.startsWith("plugin-")) openPlugin(id.slice(7));
+    else if (id) openDetail(id);
   } catch {
     $("state").innerHTML = `${esc(t("暫時打不開組件清單"))}<br><button class="btn" id="retry">${esc(t("重試"))}</button>`;
     $("retry").onclick = load;
@@ -192,16 +248,27 @@ $("f-issues").href = `${REPO}/issues`;
 $("q").addEventListener("input", (e) => { query = e.target.value; render(); });
 document.addEventListener("click", (e) => {
   const l = e.target.closest("[data-lang]");
-  if (l) { lang = l.dataset.lang; remember("lang", lang); render(); if ($("detail").open) openDetail(decodeURIComponent(location.hash.slice(1))); return; }
+  if (l) {
+    lang = l.dataset.lang; remember("lang", lang); render();
+    if ($("detail").open) { const h = decodeURIComponent(location.hash.slice(1)); if (h.startsWith("plugin-")) openPlugin(h.slice(7)); else openDetail(h); }
+    return;
+  }
   const th = e.target.closest("[data-theme]");
   if (th) { theme = th.dataset.theme; remember("theme", theme); render(); return; }
   const c = e.target.closest("[data-cat]");
   if (c) { cat = c.dataset.cat || null; render(); return; }
+  const o = e.target.closest("[data-open]");
+  if (o) { openDetail(o.dataset.open); return; }
+  const pl = e.target.closest("[data-plugin]");
+  if (pl) { openPlugin(pl.dataset.plugin); return; }
   const k = e.target.closest(".card");
   if (k) { openDetail(k.dataset.id); return; }
   if (e.target.closest("[data-close]") || e.target === $("detail")) $("detail").close();
 });
-document.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.classList && e.target.classList.contains("card")) openDetail(e.target.dataset.id); });
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Enter" || !e.target.classList || !e.target.classList.contains("card")) return;
+  if (e.target.dataset.plugin) openPlugin(e.target.dataset.plugin); else openDetail(e.target.dataset.id);
+});
 $("detail").addEventListener("close", () => history.replaceState(null, "", location.pathname + location.search));
 render();
 load();

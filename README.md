@@ -22,6 +22,7 @@
 | 位置 | 內容 |
 |---|---|
 | `widgets/` | 每個組件一個資料夾，資料夾名稱就是組件的 id |
+| `plugins/` | FullWidget 官方插件（`fullwidget.*`），只放官方的，不接受投稿 |
 | `scripts/check.mjs` | 檢查組件：說明檔、權限、檔案類型和大小、版本號 |
 | `scripts/build.mjs` | 把每個組件打包成 `.fwz`，產生 `index.json` 和網站 |
 | `site/` | 市場網站 |
@@ -32,6 +33,8 @@
 ### index.json
 
 FullWidget 讀的組件清單，網址是 `https://hmgvibe.github.io/fullwidget-market/index.json`。每個組件有 `id`、`name`、`description`、`author`、`version`、`category`、`permissions`、`icon`、`preview`、`package`（`.fwz` 的位置，相對於 index.json）、`sha256`、`bytes` 和 `updated`。FullWidget 下載 `.fwz` 後會核對 `sha256`，不符就不安裝。
+
+`plugins` 列出官方插件：`id`、`name`、`description`、`version`、`run`（怎樣啟動它）、`package`（插件資料夾的 zip）、`sha256`、`bytes`、`source` 和 `updated`。FullWidget 1.4.0 以上只從這個官方市場安裝插件，同樣核對 `sha256`。
 
 ---
 
@@ -44,5 +47,7 @@ Widgets for FullWidget (desktop widgets for Windows), made by everyone.
 **Installing:** in FullWidget, Control Center → Add widgets → Online, then Install. You see what the widget may do before anything is installed, and updates show up in the same place. Or download the `.fwz` file from the website and double-click it. Needs FullWidget 1.1.0 or later.
 
 **Submitting:** see [CONTRIBUTING.md](CONTRIBUTING.md). Fork, put your widget in `widgets/<your-github-name>.<widget>/`, and open a pull request. Once the automatic check passes and a maintainer has looked at it, it's merged and appears in the market within minutes.
+
+**Official plugins:** `plugins/` holds FullWidget's own plugins (`fullwidget.*`, no submissions). FullWidget 1.4.0 and later installs them from this market's `index.json` (`plugins`), checking each zip's `sha256`; market widgets may use them with `plugin:fullwidget.<name>`.
 
 **Trying it locally:** with Node.js 20+, run `node scripts/check.mjs` and `node scripts/build.mjs`; the site is built into `_site/`.

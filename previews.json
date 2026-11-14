@@ -19,5 +19,8 @@
         "en": "London"
       }
     }
+  },
+  "hmgvibe.perf-monitor": {
+    "script": "(() => { const v = []; for (let i = 0; i < 60; i++) v.push(Math.round(138 + 10 * Math.sin(i / 5) + 6 * Math.sin(i / 1.7) - (i > 40 && i < 46 ? 34 : 0))); history.length = 0; history.push(...v.slice(0, 59)); show({ gpus: [{ name: 'GeForce RTX', util: 87, vramUsed: 4.6 * 2 ** 30, vramTotal: 6 * 2 ** 30, temp: 71, power: 92, clock: 1702 }], fps: { state: 'ok', value: 141, process: 'eldenring', title: '' } }); showSystem({ cpu: { usage: 46 }, memory: { usage: 63 } }); show = missing = showSystem = () => {}; })();"
   }
 }

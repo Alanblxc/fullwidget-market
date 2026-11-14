@@ -17,5 +17,8 @@ jobs:
           node-version: 22
       - name: 檢查改動的組件 / Check the changed widgets
         run: node scripts/check.mjs --against origin/${{ github.base_ref }}
+        env:
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          REPO_OWNER: ${{ github.repository_owner }}
       - name: 試著打包全部組件 / Build everything
         run: node scripts/build.mjs

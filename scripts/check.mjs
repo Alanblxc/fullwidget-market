@@ -3,17 +3,24 @@
 //   node scripts/check.mjs --against origin/main  only what a pull request changes, compared with the market
 // Writes a report (Markdown) to the console, and to $GITHUB_STEP_SUMMARY on GitHub. Exits 1 on errors.
 import fs from "node:fs";
-import { checkWidget, widgetFolders, git, parseJsonc } from "./lib.mjs";
+import { checkWidget, widgetFolders, checkPlugin, pluginFolders, git, parseJsonc } from "./lib.mjs";
 
 const args = process.argv.slice(2);
 const against = args.includes("--against") ? args[args.indexOf("--against") + 1] : null;
 
 let folders = widgetFolders();
-const notes = [];
+let pluginDirs = pluginFolders();
+const notes = [], blockers = [];
 if (against) {
   const changed = git("diff", "--name-only", `${against}...HEAD`).split("\n").filter(Boolean);
   const touched = new Set(changed.filter((f) => f.startsWith("widgets/")).map((f) => f.split("/")[1]));
-  const outside = changed.filter((f) => !f.startsWith("widgets/"));
+  const touchedPlugins = new Set(changed.filter((f) => f.startsWith("plugins/")).map((f) => f.split("/")[1]));
+  // plugins run as the user with no limits: only FullWidget's own, never a submission
+  const author = process.env.PR_AUTHOR, owner = process.env.REPO_OWNER;
+  if (touchedPlugins.size && author && owner && author.toLowerCase() !== owner.toLowerCase())
+    blockers.push("plugins/ 只放 FullWidget 官方插件，不接受投稿 / plugins/ holds FullWidget's own plugins only and doesn't take submissions");
+  pluginDirs = pluginDirs.filter((f) => touchedPlugins.has(f));
+  const outside = changed.filter((f) => !f.startsWith("widgets/") && !f.startsWith("plugins/"));
   if (outside.length) notes.push(`改了 widgets/ 以外的檔案，需要維護者看過 / changes outside widgets/: ${outside.map((f) => `\`${f}\``).join(", ")}`);
   for (const f of touched) if (!folders.includes(f)) notes.push(`移除了組件 \`${f}\` / removes \`${f}\``);
   folders = folders.filter((f) => touched.has(f));
@@ -27,11 +34,25 @@ function published(folder) {
 }
 
 const results = folders.map((f) => ({ ...checkWidget(f, { published: published(f) }), before: published(f) }));
-const errors = results.reduce((n, r) => n + r.errors.length, 0);
+const pluginResults = pluginDirs.map((f) => {
+  let before = null;
+  if (against) { const text = git("show", `${against}:plugins/${f}/plugin.json`); try { before = text ? parseJsonc(text).version : null; } catch { } }
+  return { ...checkPlugin(f, { published: before }), before };
+});
+const errors = blockers.length + results.reduce((n, r) => n + r.errors.length, 0) + pluginResults.reduce((n, r) => n + r.errors.length, 0);
 
 const lines = [`## 組件檢查 / Widget check`, ""];
-if (!results.length && !notes.length) lines.push("沒有組件改動。/ No widget changes.");
+if (!results.length && !pluginResults.length && !notes.length && !blockers.length) lines.push("沒有組件改動。/ No widget changes.");
+for (const b of blockers) lines.push(`- ❌ ${b}`);
 for (const n of notes) lines.push(`- ${n}`);
+for (const r of pluginResults) {
+  const m = r.manifest || {};
+  const what = r.before ? (r.unchangedVersion ? `改了檔案但版本仍是 ${r.before}` : `更新 ${r.before} → ${m.version}`) : `新插件 v${m.version ?? "?"}`;
+  lines.push("", `### ${r.errors.length ? "❌" : "✅"} 官方插件 \`${r.folder}\``, "", `${what}；執行 \`${m.run ?? "?"}\`；${r.files.length} 個檔案`);
+  if (r.unchangedVersion) r.warnings.push("改了檔案卻沒有提高 version，已安裝的人不會收到更新 / files changed but the version didn't");
+  for (const e of r.errors) lines.push(`- ❌ ${e}`);
+  for (const w of r.warnings) lines.push(`- ℹ️ ${w}`);
+}
 for (const r of results) {
   const m = r.manifest || {};
   const name = m.name && typeof m.name === "object" ? m.name["zh-TW"] || m.name.en || Object.values(m.name)[0] : m.name;

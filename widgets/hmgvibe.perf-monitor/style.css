@@ -1,0 +1,72 @@
+body { container-type: size; }
+
+.perf { height: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); column-gap: 1.1rem; font-variant-numeric: tabular-nums; }
+.perf[hidden] { display: none; }
+
+/* the frame rate: the one big number */
+.hero { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.fps { display: flex; flex-direction: column; gap: 0.25rem; }
+.fps .w-display { font-size: min(34cqh, 19cqw); line-height: 0.92; letter-spacing: var(--w-display-tracking); }
+.perf.low .fps .w-display { color: var(--w-warn); }
+.fps .w-display.none { color: var(--w-fg-faint); }
+.fps .unit { font-weight: 600; letter-spacing: 0.06em; }
+.app { margin-top: 0.3rem; font-size: 0.75rem; color: var(--w-fg-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-height: 1.2em; }
+.spark { flex: 1; width: 100%; min-height: 14px; max-height: 64px; margin-top: 0.45rem; overflow: visible; }
+/* values change every second: no transitions, or the card would be animating all the time */
+.spark .s0 { stop-color: var(--w-accent); stop-opacity: 0.3; }
+.spark .s1 { stop-color: var(--w-accent); stop-opacity: 0; }
+.spark .line { fill: none; stroke: var(--w-accent); stroke-width: 1.6; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.hint { margin-top: auto; display: flex; flex-direction: column; align-items: flex-start; gap: 0.4rem; font-size: 0.75rem; line-height: 1.45; color: var(--w-fg-muted); }
+.hint[hidden] { display: none; }
+.hint .w-btn { padding: 0.2rem 0.75rem; font-size: 0.75rem; }
+
+/* GPU, video memory, CPU, memory */
+.rows { display: grid; align-content: center; gap: 0.5rem; min-width: 0; }
+.row { display: grid; grid-template-columns: auto 1fr; align-items: baseline; column-gap: 0.5rem; row-gap: 0.22rem; }
+.row .k { white-space: nowrap; }
+.row .v { justify-self: end; font-size: 0.93rem; white-space: nowrap; }
+.row .v small { font-size: 0.72em; color: var(--w-fg-muted); margin-left: 0.05em; }
+.row.hot .v { color: var(--w-warn); }
+.row .w-bar { grid-column: 1 / -1; height: 3px; }
+.row .w-bar > i { transition: none; }
+.sensors { font-size: 0.72rem; color: var(--w-fg-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sensors[hidden] { display: none; }
+.perf.no-system .row[data-k="cpu"], .perf.no-system .row[data-k="mem"] { display: none; }
+
+/* nothing to show yet */
+.missing { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.35rem; text-align: center; padding: 0 0.5rem; }
+.missing[hidden] { display: none; }
+.missing svg { width: 26px; height: 26px; fill: none; stroke: var(--w-accent); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 0.2rem; }
+.missing b { font-weight: 600; font-size: 0.93rem; }
+.missing span { font-size: 0.75rem; color: var(--w-fg-muted); }
+
+/* small cards keep the frame rate and the GPU */
+@container (max-height: 150px) {
+  .spark { display: none; }
+  .row[data-k="cpu"], .row[data-k="mem"], .sensors { display: none; }
+  .fps .w-display { font-size: min(44cqh, 19cqw); }
+}
+@container (max-width: 250px) {
+  .perf { grid-template-columns: 1fr; grid-template-rows: auto 1fr; row-gap: 0.6rem; }
+  .spark, .sensors { display: none; }
+  .fps .w-display { font-size: min(26cqh, 26cqw); }
+  .rows { align-content: start; }
+}
+
+/* ── 玻璃上的字: big type, no chart ── */
+html[data-theme="type"] .spark { display: none; }
+html[data-theme="type"] .hero { justify-content: center; }
+html[data-theme="type"] .fps .w-display { font-family: var(--w-font-display); font-weight: var(--w-display-weight); font-size: min(46cqh, 24cqw); }
+html[data-theme="type"] .fps .unit { color: var(--w-fg-muted); }
+html[data-theme="type"] .row .k { font-weight: 600; }
+html[data-theme="type"] .row .w-bar { display: none; }
+html[data-theme="type"] .rows { gap: 0.35rem; }
+
+/* ── 書桌上的紙: a ledger ── */
+html[data-theme="paper"] .spark .line { stroke: var(--w-fg); stroke-width: 1.2; }
+html[data-theme="paper"] .spark .area { display: none; }
+html[data-theme="paper"] .row { grid-template-columns: auto 1fr auto; }
+html[data-theme="paper"] .row .k { color: var(--w-fg); }
+html[data-theme="paper"] .row .v { grid-column: 3; grid-row: 1; }
+html[data-theme="paper"] .row .k { grid-column: 1; grid-row: 1; }
+html[data-theme="paper"] .row .w-bar { grid-row: 2; }

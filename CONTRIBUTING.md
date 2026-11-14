@@ -33,6 +33,8 @@
 - 更新別人的組件之前，先在 issue 裏和作者商量。
 - 你要有權發佈組件裏的所有內容（程式碼、圖片、字體、聲音）。可以在組件資料夾放一個 `LICENSE` 檔案說明授權。
 
+- `plugins/` 只放 FullWidget 官方插件，不接受投稿。你的組件可以用它們：在 `permissions` 聲明 `plugin:fullwidget.<名稱>`（例如 `plugin:fullwidget.perf`），並在組件裏告訴沒裝插件的人去「添加組件 → 線上 → 官方插件」安裝。`shell.run` 和其他 `plugin:` 權限只給用戶自己寫的組件，市場不收。
+
 在自己電腦上先檢查：`node scripts/check.mjs`（需要 Node.js 20 以上）。
 
 ---
@@ -56,5 +58,7 @@ The automatic check lists its findings on the pull request: fix every ❌; ⚠ n
 - Don't collect or send away people's data unless that is plainly what the widget is for.
 - Talk to the author in an issue before changing someone else's widget.
 - You must have the right to publish everything in it; add a `LICENSE` file if you like.
+
+- `plugins/` holds FullWidget's official plugins only and takes no submissions. Your widget may use them: declare `plugin:fullwidget.<name>` (e.g. `plugin:fullwidget.perf`) and tell people without the plugin to get it under Add widgets → Online → Official plugins. `shell.run` and other `plugin:` permissions are for people's own widgets and aren't accepted.
 
 Check locally with `node scripts/check.mjs` (Node.js 20+).

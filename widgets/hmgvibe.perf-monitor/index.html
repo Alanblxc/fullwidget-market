@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="perf" id="perf">
+    <section class="hero">
+      <div class="fps"><span class="unit w-label">FPS</span><span class="w-display none" id="fps">–</span></div>
+      <div class="app" id="app"></div>
+      <svg class="spark" id="spark" viewBox="0 0 120 30" preserveAspectRatio="none" aria-hidden="true">
+        <defs><linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop class="s0" offset="0"/><stop class="s1" offset="1"/></linearGradient></defs>
+        <path class="area" id="area" fill="url(#fade)"/><path class="line" id="line"/>
+      </svg>
+      <div class="hint" id="hint" hidden><span id="hint-text"></span><button class="w-btn is-primary" id="hint-btn" hidden></button></div>
+    </section>
+    <section class="rows" id="rows"></section>
+  </main>
+  <div class="missing" id="missing" hidden>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3v5M15 3v5M6.5 8h11v3.5a5.5 5.5 0 0 1-11 0z"/><path d="M12 17v4"/></svg>
+    <b id="missing-title"></b>
+    <span id="missing-text"></span>
+  </div>
+  <script src="main.js"></script>
+</body>
+</html>

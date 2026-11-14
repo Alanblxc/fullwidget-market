@@ -1,0 +1,21 @@
+{
+  "id": "hmgvibe.perf-monitor",
+  "name": { "zh-TW": "性能監控", "zh-CN": "性能监控", "en": "Performance monitor" },
+  "description": {
+    "zh-TW": "遊戲幀率、顯示卡使用率、顯存、溫度，加上 CPU 和記憶體。要搭配官方插件「性能數據」。",
+    "zh-CN": "游戏帧率、显卡使用率、显存、温度，加上 CPU 和内存。要搭配官方插件“性能数据”。",
+    "en": "Game frame rate, GPU load, video memory and temperature, plus CPU and memory. Works with the official Performance data plugin."
+  },
+  "version": "1.0.0",
+  "author": "hmgvibe",
+  "entry": "index.html",
+  "icon": "icon.svg",
+  "category": "system",
+  "preview": "preview/{theme}.{lang}.webp",
+  "size": { "width": 330, "height": 190, "minWidth": 200, "minHeight": 120, "maxWidth": 720, "maxHeight": 480, "grow": 1 },
+  "permissions": ["system", "plugin:fullwidget.perf"],
+  "settings": [
+    { "key": "system", "type": "toggle", "label": { "zh-TW": "顯示 CPU 和記憶體", "zh-CN": "显示 CPU 和内存", "en": "Show CPU and memory" }, "default": true },
+    { "key": "sensors", "type": "toggle", "label": { "zh-TW": "顯示溫度和功耗（NVIDIA）", "zh-CN": "显示温度和功耗（NVIDIA）", "en": "Show temperature and power (NVIDIA)" }, "default": true }
+  ]
+}

@@ -3,7 +3,7 @@
 //   node scripts/build.mjs [--base-url https://hmgvibe.github.io/fullwidget-market/]
 import fs from "node:fs";
 import path from "node:path";
-import { ROOT, WIDGETS, checkWidget, widgetFolders, git, zip, sha256 } from "./lib.mjs";
+import { ROOT, WIDGETS, PLUGINS, checkWidget, widgetFolders, checkPlugin, pluginFolders, git, zip, sha256 } from "./lib.mjs";
 
 const OUT = path.join(ROOT, "_site");
 fs.rmSync(OUT, { recursive: true, force: true });
@@ -61,14 +61,43 @@ for (const folder of widgetFolders()) {
   });
   console.log(`✓ ${m.id} ${m.version}  ${(pkg.length / 1024).toFixed(1)} KB`);
 }
+// official plugins: a zip of the folder each
+const plugins = [];
+for (const folder of pluginFolders()) {
+  const r = checkPlugin(folder);
+  if (r.errors.length) {
+    failed++;
+    console.error(`✗ plugins/${folder}\n  ${r.errors.join("\n  ")}`);
+    continue;
+  }
+  const m = r.manifest, dir = path.join(PLUGINS, folder);
+  const pkg = zip(r.files.map((f) => ({ rel: f.rel, data: fs.readFileSync(path.join(dir, f.rel)) })));
+  const pkgName = `${folder}-${m.version}.zip`;
+  fs.writeFileSync(path.join(OUT, "packages", pkgName), pkg);
+  plugins.push({
+    id: folder,
+    name: m.name,
+    description: m.description ?? "",
+    author: m.author ?? "FullWidget",
+    version: m.version,
+    run: m.run,
+    package: `packages/${pkgName}`,
+    sha256: sha256(pkg),
+    bytes: pkg.length,
+    files: r.files.length,
+    source: `plugins/${folder}`,
+    updated: git("log", "-1", "--format=%cI", "--", `plugins/${folder}`) || new Date().toISOString(),
+  });
+  console.log(`✓ plugin ${folder} ${m.version}  ${(pkg.length / 1024).toFixed(1)} KB`);
+}
 if (failed) {
-  console.error(`\n${failed} widget(s) failed the check; nothing was published.`);
+  console.error(`\n${failed} widget(s) or plugin(s) failed the check; nothing was published.`);
   process.exit(1);
 }
 
-const index = { format: 1, name: "FullWidget 組件市場", updated: new Date().toISOString(), widgets };
+const index = { format: 1, name: "FullWidget 組件市場", updated: new Date().toISOString(), widgets, plugins };
 fs.writeFileSync(path.join(OUT, "index.json"), JSON.stringify(index, null, 1));
 // the website itself
 fs.cpSync(path.join(ROOT, "site"), OUT, { recursive: true });
 fs.writeFileSync(path.join(OUT, ".nojekyll"), "");
-console.log(`\n${widgets.length} widget(s) → _site/`);
+console.log(`\n${widgets.length} widget(s), ${plugins.length} plugin(s) → _site/`);
