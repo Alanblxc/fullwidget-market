@@ -1,0 +1,20 @@
+{
+  "id": "hmgvibe.holiday-cn",
+  "name": { "zh-TW": "放假倒數", "zh-CN": "放假倒计时", "en": "Holiday countdown (China)" },
+  "description": {
+    "zh-TW": "中國大陸下一個法定假期還有幾天、放幾天、哪幾天調休上班，以及明天要不要上班。按國務院公布的安排。",
+    "zh-CN": "下一个法定假期还有几天、放几天、哪几天调休上班，以及明天要不要上班。按国务院公布的安排。",
+    "en": "Days until the next public holiday in mainland China, how long it is, which weekend days are working days, and whether tomorrow is a workday. From the State Council's schedule."
+  },
+  "version": "1.0.0",
+  "author": "hmgvibe",
+  "entry": "index.html",
+  "icon": "icon.svg",
+  "category": "time",
+  "preview": "preview/{theme}.{lang}.webp",
+  "size": { "width": 300, "height": 180, "minWidth": 220, "minHeight": 140, "maxWidth": 600, "maxHeight": 400, "grow": 1 },
+  "permissions": ["network:cdn.jsdelivr.net", "network:raw.githubusercontent.com"],
+  "settings": [
+    { "key": "showMakeup", "type": "toggle", "label": { "zh-TW": "顯示調休上班的日子", "zh-CN": "显示调休上班的日子", "en": "Show the weekend workdays" }, "default": true }
+  ]
+}

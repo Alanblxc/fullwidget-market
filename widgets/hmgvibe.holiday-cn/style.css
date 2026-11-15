@@ -1,0 +1,17 @@
+body { display: flex; flex-direction: column; gap: 0.35rem; }
+
+.hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 0.8rem; margin-top: 0.1rem; }
+.name { font: 600 1.35rem/1.2 var(--w-font-title); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-bottom: 0.35rem; }
+.count { display: flex; align-items: baseline; gap: 0.3rem; flex: none; }
+.count .w-display { font-size: 3rem; line-height: 0.95; color: var(--w-accent); letter-spacing: var(--w-display-tracking); }
+.count .unit { font-size: 0.85rem; color: var(--w-fg-muted); white-space: nowrap; }
+
+.when { font-size: 0.82rem; color: var(--w-fg); }
+.makeup { font-size: 0.75rem; line-height: 1.45; color: var(--w-warn); }
+.makeup[hidden] { display: none; }
+
+.days { margin-top: auto; display: flex; gap: 0.4rem; }
+.chip { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.22rem 0.6rem; border-radius: 99px; font-size: 0.75rem; background: var(--w-control-bg); color: var(--w-fg-muted); }
+.chip b { font-weight: 600; color: var(--w-fg); }
+.chip.off { background: color-mix(in srgb, var(--w-accent) 18%, transparent); color: var(--w-accent); }
+.chip.makeup { background: color-mix(in srgb, var(--w-warn) 18%, transparent); color: var(--w-warn); }

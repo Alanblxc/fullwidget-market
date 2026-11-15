@@ -9,6 +9,12 @@ const W = {
   vram: t({ "zh-TW": "顯存", "zh-CN": "显存", en: "VRAM" }),
   mem: t({ "zh-TW": "記憶體", "zh-CN": "内存", en: "Memory" }),
   noGame: t({ "zh-TW": "前景沒有遊戲", "zh-CN": "前台没有游戏", en: "No game in front" }),
+  choose: t({ "zh-TW": "選擇要看幀率的軟體", "zh-CN": "选择要看帧率的软件", en: "Choose a program" }),
+  front: t({ "zh-TW": "前景的軟體", "zh-CN": "前台的软件", en: "Whatever's in front" }),
+  notDrawing: t({ "zh-TW": "{name}：沒有在畫面上", "zh-CN": "{name}：没在画面上", en: "{name}: not drawing" }),
+  drawing: t({ "zh-TW": "正在繪製畫面的軟體", "zh-CN": "正在绘制画面的软件", en: "Programs drawing frames" }),
+  none: t({ "zh-TW": "現在沒有軟體在繪製畫面，先打開遊戲", "zh-CN": "现在没有软件在绘制画面，先打开游戏", en: "Nothing is drawing frames. Start the game first" }),
+  oldPlugin: t({ "zh-TW": "選軟體要新版的官方插件「性能數據」", "zh-CN": "选软件要新版的官方插件“性能数据”", en: "Choosing a program needs the newer Performance data plugin" }),
   needs: t({ "zh-TW": "顯示幀率要 Windows 授權一次", "zh-CN": "显示帧率要 Windows 授权一次", en: "Frame rates need Windows' OK once" }),
   enable: t({ "zh-TW": "授權", "zh-CN": "授权", en: "Allow" }),
   signout: t({ "zh-TW": "登出再登入 Windows 後顯示幀率", "zh-CN": "注销再登录 Windows 后显示帧率", en: "Sign out of Windows and back in to see frame rates" }),
@@ -71,13 +77,13 @@ function hint(text, button) {
 /** One reading from the plugin. */
 function show(s) {
   missing(null);
-  const f = s.fps || {};
+  const f = pickFps(s.fps || {});
   const ok = f.state === "ok" && f.value != null;
+  $("app-name").textContent = f.label;
+  $("app").classList.toggle("unset", !!f.unset);
   $("fps").textContent = ok ? Math.round(f.value) : "–";
   $("fps").classList.toggle("none", !ok);
   $("perf").classList.toggle("low", ok && f.value < 30);
-  $("app").textContent = ok ? f.process || "" : f.state === "idle" ? W.noGame : "";
-  $("app").title = ok ? f.title || "" : "";
   history.push(ok ? f.value : null);
   while (history.length > 60) history.shift();
   if (f.state === "needs-permission") hint(W.needs, W.enable);
@@ -97,6 +103,55 @@ function show(s) {
   $("sensors").textContent = bits.join(" · ");
   $("sensors").hidden = !bits.length || opts.sensors === false;
 }
+
+// ───────────────────────── which program's frame rate ─────────────────────────
+
+let programs = [];        // what drew frames in the last second: [{ process, name, value }]
+const known = new Map();  // process → its own name, remembered for when it isn't drawing
+const fmt = (s, v) => s.replace(/\{(\w+)\}/g, (_, k) => v[k]);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const chosen = () => String(opts.app || "").trim();
+
+/** The reading for the program the user chose (or the one in front, for "*"), with a label. */
+function pickFps(f) {
+  if (Array.isArray(f.programs)) { programs = f.programs; for (const p of programs) known.set(p.process.toLowerCase(), p.name); }
+  const app = chosen();
+  if (f.state !== "ok") return { ...f, label: "" };
+  if (!app) return { state: "ok", value: null, label: W.choose, unset: true };
+  if (app === "*") return { ...f, label: f.state === "ok" && f.value != null ? f.process || "" : W.noGame };
+  if (!Array.isArray(f.programs)) return { state: "ok", value: null, label: W.oldPlugin };
+  const p = programs.find((x) => x.process.toLowerCase() === app.toLowerCase());
+  const name = (p && p.name) || known.get(app.toLowerCase()) || app;
+  return p ? { state: "ok", value: p.value, label: name } : { state: "ok", value: null, label: fmt(W.notDrawing, { name }) };
+}
+
+const menu = $("menu");
+$("app").addEventListener("click", (e) => {
+  e.stopPropagation();
+  if (!menu.hidden) return closeMenu();
+  const app = chosen().toLowerCase();
+  // what's drawing now, busiest first; the chosen one stays listed while it isn't
+  const list = programs.filter((p) => !/^(dwm|msedgewebview2|fullwidget)$/i.test(p.process));
+  if (app && app !== "*" && !list.some((p) => p.process.toLowerCase() === app)) list.unshift({ process: chosen(), name: known.get(app) || chosen(), value: null });
+  menu.innerHTML = `<div class="mh">${W.drawing}</div>`
+    + (list.length ? list.map((p) => `<button type="button" data-p="${esc(p.process)}" class="${p.process.toLowerCase() === app ? "on" : ""}"><span>${esc(p.name)}</span><small>${p.value == null ? "–" : Math.round(p.value)}</small></button>`).join("") : `<div class="mn">${W.none}</div>`)
+    + `<hr><button type="button" data-p="*" class="${app === "*" ? "on" : ""}"><span>${W.front}</span></button>`;
+  menu.hidden = false;
+  const r = menu.getBoundingClientRect(), card = document.body.getBoundingClientRect(), a = $("app").getBoundingClientRect();
+  menu.style.left = `${Math.max(card.left + 4, Math.min(a.left, card.right - r.width - 4))}px`;
+  menu.style.top = `${Math.max(card.top + 4, Math.min(a.bottom + 4, card.bottom - r.height - 4))}px`;
+});
+menu.addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-p]");
+  if (!b) return;
+  closeMenu();
+  history.length = 0;
+  widget.settings.set("app", b.dataset.p);
+});
+function closeMenu() { menu.hidden = true; }
+document.addEventListener("pointerdown", (e) => { if (!menu.hidden && !menu.contains(e.target) && !$("app").contains(e.target)) closeMenu(); }, true);
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeMenu(); });
+window.addEventListener("blur", closeMenu);
 
 function showSystem(d) {
   if (d.cpu) setRow("cpu", d.cpu.usage);

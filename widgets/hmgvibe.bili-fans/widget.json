@@ -1,0 +1,22 @@
+{
+  "id": "hmgvibe.bili-fans",
+  "name": { "zh-TW": "B站粉絲數", "zh-CN": "B站粉丝数", "en": "Bilibili followers" },
+  "description": {
+    "zh-TW": "B站帳號的粉絲數、今天漲了多少，和最近兩週的變化。填上 UID 就行，不用登入。",
+    "zh-CN": "B站账号的粉丝数、今天涨了多少，和最近两周的变化。填上 UID 就行，不用登录。",
+    "en": "A Bilibili account's followers, today's change and the last two weeks. Just the UID, no sign-in."
+  },
+  "version": "1.0.0",
+  "author": "hmgvibe",
+  "entry": "index.html",
+  "icon": "icon.svg",
+  "category": "info",
+  "preview": "preview/{theme}.{lang}.webp",
+  "size": { "width": 300, "height": 160, "minWidth": 200, "minHeight": 120, "maxWidth": 600, "maxHeight": 320, "grow": 1 },
+  "permissions": ["network:api.bilibili.com", "network:*.hdslb.com"],
+  "settings": [
+    { "key": "uid", "type": "text", "label": "UID",
+      "description": { "zh-TW": "個人空間網址裏的數字：space.bilibili.com/後面那串", "zh-CN": "个人空间网址里的数字：space.bilibili.com/ 后面那串", "en": "The number in the profile address after space.bilibili.com/" },
+      "default": "" }
+  ]
+}

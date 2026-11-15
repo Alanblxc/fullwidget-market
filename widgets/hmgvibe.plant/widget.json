@@ -1,0 +1,26 @@
+{
+  "id": "hmgvibe.plant",
+  "name": { "zh-TW": "桌面小植物", "zh-CN": "桌面小植物", "en": "Desk plant" },
+  "description": {
+    "zh-TW": "一盆放在桌面上的小植物。每天澆一次水它就長大一點，忘了澆會垂頭喪氣，再澆就好了。",
+    "zh-CN": "一盆放在桌面上的小植物。每天浇一次水它就长大一点，忘了浇会垂头丧气，再浇就好了。",
+    "en": "A little plant on your desktop. Water it once a day and it grows a bit; forget and it droops, until you water it again."
+  },
+  "version": "1.0.0",
+  "author": "hmgvibe",
+  "entry": "index.html",
+  "icon": "icon.svg",
+  "category": "other",
+  "preview": "preview/{theme}.{lang}.webp",
+  "size": { "width": 200, "height": 240, "minWidth": 150, "minHeight": 180, "maxWidth": 400, "maxHeight": 480, "grow": 1 },
+  "permissions": [],
+  "settings": [
+    { "key": "kind", "type": "select", "label": { "zh-TW": "種類", "zh-CN": "种类", "en": "Kind" }, "default": "leafy",
+      "options": [
+        { "value": "leafy", "label": { "zh-TW": "綠植", "zh-CN": "绿植", "en": "Leafy" } },
+        { "value": "sunflower", "label": { "zh-TW": "向日葵", "zh-CN": "向日葵", "en": "Sunflower" } },
+        { "value": "cactus", "label": { "zh-TW": "仙人掌", "zh-CN": "仙人掌", "en": "Cactus" } }
+      ] },
+    { "key": "name", "type": "text", "label": { "zh-TW": "名字", "zh-CN": "名字", "en": "Name" }, "default": { "zh-TW": "小綠", "zh-CN": "小绿", "en": "Sprout" } }
+  ]
+}

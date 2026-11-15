@@ -1,0 +1,12 @@
+{
+  "name": { "zh-TW": "檔案", "zh-CN": "文件", "en": "Files" },
+  "description": {
+    "zh-TW": "列出你選的資料夾裏的檔案和圖示，打開、拖出去、放進來、改名、刪到資源回收筒，給「資料夾盒子」這類組件用。",
+    "zh-CN": "列出你选的文件夹里的文件和图标，打开、拖出去、放进来、改名、删到回收站，给“文件夹盒子”这类组件用。",
+    "en": "Lists the files in a folder you pick, with their icons; opens them, drags them out, takes files in, renames and recycles, for widgets such as Folder box."
+  },
+  "version": "1.0.0",
+  "author": "FullWidget",
+  "run": "main.ps1",
+  "idleMinutes": 10
+}

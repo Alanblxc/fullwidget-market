@@ -1,0 +1,28 @@
+{
+  "id": "hmgvibe.daynight",
+  "name": { "zh-TW": "日夜世界地圖", "zh-CN": "日夜世界地图", "en": "Day and night map" },
+  "description": {
+    "zh-TW": "世界地圖上，此刻哪裏是白天、哪裏是黑夜，和幾個城市的當地時間。不用連網。",
+    "zh-CN": "世界地图上，此刻哪里是白天、哪里是黑夜，和几个城市的当地时间。不用联网。",
+    "en": "Where on Earth it's day and where it's night right now, with the local time of a few cities. Works offline."
+  },
+  "version": "1.0.0",
+  "author": "hmgvibe",
+  "entry": "index.html",
+  "icon": "icon.svg",
+  "category": "time",
+  "preview": "preview/{theme}.{lang}.webp",
+  "size": { "width": 380, "height": 220, "minWidth": 260, "minHeight": 150, "maxWidth": 900, "maxHeight": 520, "grow": 1 },
+  "permissions": [],
+  "settings": [
+    { "key": "cities", "type": "textarea",
+      "label": { "zh-TW": "城市（一行一個，最多 5 個）", "zh-CN": "城市（一行一个，最多 5 个）", "en": "Cities (one per line, up to 5)" },
+      "description": {
+        "zh-TW": "可以用：北京 上海 香港 台北 東京 首爾 新加坡 曼谷 雅加達 新德里 杜拜 莫斯科 伊斯坦堡 開羅 約翰尼斯堡 倫敦 巴黎 柏林 羅馬 馬德里 紐約 多倫多 芝加哥 洛杉磯 舊金山 溫哥華 墨西哥城 聖保羅 布宜諾斯艾利斯 雪梨 墨爾本 奧克蘭 檀香山",
+        "zh-CN": "可以用：北京 上海 香港 台北 东京 首尔 新加坡 曼谷 雅加达 新德里 迪拜 莫斯科 伊斯坦布尔 开罗 约翰内斯堡 伦敦 巴黎 柏林 罗马 马德里 纽约 多伦多 芝加哥 洛杉矶 旧金山 温哥华 墨西哥城 圣保罗 布宜诺斯艾利斯 悉尼 墨尔本 奥克兰 檀香山",
+        "en": "Any of: Beijing Shanghai Hong Kong Taipei Tokyo Seoul Singapore Bangkok Jakarta New Delhi Dubai Moscow Istanbul Cairo Johannesburg London Paris Berlin Rome Madrid New York Toronto Chicago Los Angeles San Francisco Vancouver Mexico City São Paulo Buenos Aires Sydney Melbourne Auckland Honolulu"
+      },
+      "default": { "zh-TW": "台北\n倫敦\n紐約", "zh-CN": "北京\n伦敦\n纽约", "en": "London\nNew York\nTokyo" } },
+    { "key": "hour12", "type": "toggle", "label": { "zh-TW": "12 小時制", "zh-CN": "12 小时制", "en": "12-hour clock" }, "default": false }
+  ]
+}

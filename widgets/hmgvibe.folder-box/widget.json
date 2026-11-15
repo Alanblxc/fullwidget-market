@@ -1,0 +1,41 @@
+{
+  "id": "hmgvibe.folder-box",
+  "name": { "zh-TW": "資料夾盒子", "zh-CN": "文件夹盒子", "en": "Folder box" },
+  "description": {
+    "zh-TW": "把一個資料夾放在桌面上：看得到裏面的檔案和圖示，雙擊打開，拖出去用，把檔案拖進來收好。要搭配官方插件「檔案」。",
+    "zh-CN": "把一个文件夹放在桌面上：看得到里面的文件和图标，双击打开，拖出去用，把文件拖进来收好。要搭配官方插件“文件”。",
+    "en": "A folder on your desktop: its files with their icons, double-click to open, drag them out, drop files in to keep them there. Works with the official Files plugin."
+  },
+  "version": "1.0.0",
+  "author": "hmgvibe",
+  "entry": "index.html",
+  "icon": "icon.svg",
+  "category": "productivity",
+  "preview": "preview/{theme}.{lang}.webp",
+  "size": { "width": 360, "height": 270, "minWidth": 200, "minHeight": 150, "maxWidth": 1200, "maxHeight": 1000, "grow": 0 },
+  "permissions": ["plugin:fullwidget.files", "shell.launch"],
+  "settings": [
+    { "key": "view", "type": "select", "label": { "zh-TW": "顯示方式", "zh-CN": "显示方式", "en": "View" }, "default": "grid",
+      "options": [
+        { "value": "grid", "label": { "zh-TW": "圖示", "zh-CN": "图标", "en": "Icons" } },
+        { "value": "list", "label": { "zh-TW": "清單", "zh-CN": "列表", "en": "List" } }
+      ] },
+    { "key": "iconSize", "type": "select", "label": { "zh-TW": "圖示大小", "zh-CN": "图标大小", "en": "Icon size" }, "default": "medium",
+      "options": [
+        { "value": "small", "label": { "zh-TW": "小", "zh-CN": "小", "en": "Small" } },
+        { "value": "medium", "label": { "zh-TW": "中", "zh-CN": "中", "en": "Medium" } },
+        { "value": "large", "label": { "zh-TW": "大", "zh-CN": "大", "en": "Large" } }
+      ] },
+    { "key": "sort", "type": "select", "label": { "zh-TW": "排序", "zh-CN": "排序", "en": "Sort by" }, "default": "name",
+      "options": [
+        { "value": "name", "label": { "zh-TW": "名稱", "zh-CN": "名称", "en": "Name" } },
+        { "value": "modified", "label": { "zh-TW": "修改時間（新的在前）", "zh-CN": "修改时间（新的在前）", "en": "Date modified (newest first)" } },
+        { "value": "type", "label": { "zh-TW": "類型", "zh-CN": "类型", "en": "Type" } }
+      ] },
+    { "key": "folders", "type": "select", "label": { "zh-TW": "雙擊資料夾", "zh-CN": "双击文件夹", "en": "Double-clicking a folder" }, "default": "inside",
+      "options": [
+        { "value": "inside", "label": { "zh-TW": "在盒子裏打開", "zh-CN": "在盒子里打开", "en": "Opens it in the box" } },
+        { "value": "explorer", "label": { "zh-TW": "在檔案總管打開", "zh-CN": "在资源管理器打开", "en": "Opens it in Explorer" } }
+      ] }
+  ]
+}

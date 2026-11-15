@@ -1,0 +1,31 @@
+{
+  "id": "hmgvibe.breathe",
+  "name": { "zh-TW": "呼吸練習", "zh-CN": "呼吸练习", "en": "Breathe" },
+  "description": {
+    "zh-TW": "累了、緊張的時候，跟著圓圈慢慢吸氣、屏息、呼氣，一兩分鐘就能平靜下來。有 4-7-8、方形呼吸和平靜呼吸三種節奏。",
+    "zh-CN": "累了、紧张的时候，跟着圆圈慢慢吸气、屏息、呼气，一两分钟就能平静下来。有 4-7-8、方形呼吸和平静呼吸三种节奏。",
+    "en": "When you're tired or tense, breathe in, hold and breathe out with the circle; a minute or two calms you down. Three rhythms: 4-7-8, box breathing and calm breathing."
+  },
+  "version": "1.0.0",
+  "author": "hmgvibe",
+  "entry": "index.html",
+  "icon": "icon.svg",
+  "category": "productivity",
+  "preview": "preview/{theme}.{lang}.webp",
+  "size": { "width": 220, "height": 240, "minWidth": 160, "minHeight": 180, "maxWidth": 500, "maxHeight": 540, "grow": 1 },
+  "permissions": [],
+  "settings": [
+    { "key": "pattern", "type": "select", "label": { "zh-TW": "節奏", "zh-CN": "节奏", "en": "Rhythm" }, "default": "calm",
+      "options": [
+        { "value": "calm", "label": { "zh-TW": "平靜呼吸（吸 4 · 呼 6）", "zh-CN": "平静呼吸（吸 4 · 呼 6）", "en": "Calm (in 4 · out 6)" } },
+        { "value": "box", "label": { "zh-TW": "方形呼吸（4 · 4 · 4 · 4）", "zh-CN": "方形呼吸（4 · 4 · 4 · 4）", "en": "Box (4 · 4 · 4 · 4)" } },
+        { "value": "478", "label": { "zh-TW": "4-7-8 呼吸（吸 4 · 屏 7 · 呼 8）", "zh-CN": "4-7-8 呼吸（吸 4 · 屏 7 · 呼 8）", "en": "4-7-8 (in 4 · hold 7 · out 8)" } }
+      ] },
+    { "key": "minutes", "type": "select", "label": { "zh-TW": "每次", "zh-CN": "每次", "en": "Each time" }, "default": "2",
+      "options": [
+        { "value": "1", "label": { "zh-TW": "1 分鐘", "zh-CN": "1 分钟", "en": "1 minute" } },
+        { "value": "2", "label": { "zh-TW": "2 分鐘", "zh-CN": "2 分钟", "en": "2 minutes" } },
+        { "value": "5", "label": { "zh-TW": "5 分鐘", "zh-CN": "5 分钟", "en": "5 minutes" } }
+      ] }
+  ]
+}

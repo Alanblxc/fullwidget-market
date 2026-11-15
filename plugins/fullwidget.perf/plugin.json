@@ -1,11 +1,11 @@
 {
   "name": { "zh-TW": "性能數據", "zh-CN": "性能数据", "en": "Performance data" },
   "description": {
-    "zh-TW": "顯示卡使用率、顯存、溫度和功耗，以及前景遊戲的幀率，給「性能監控」這類組件用。",
-    "zh-CN": "显卡使用率、显存、温度和功耗，以及前台游戏的帧率，给“性能监控”这类组件用。",
-    "en": "GPU load, video memory, temperature and power, and the frame rate of the game in front, for widgets such as Performance monitor."
+    "zh-TW": "顯示卡使用率、顯存、溫度和功耗，以及遊戲的幀率，給「性能監控」這類組件用。",
+    "zh-CN": "显卡使用率、显存、温度和功耗，以及游戏的帧率，给“性能监控”这类组件用。",
+    "en": "GPU load, video memory, temperature and power, and games' frame rates, for widgets such as Performance monitor."
   },
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "FullWidget",
   "run": "main.ps1",
   "idleMinutes": 2

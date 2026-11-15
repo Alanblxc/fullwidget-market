@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="top"><span class="name" id="name"></span><span class="w-label" id="day"></span></div>
+  <div class="pot-wrap" id="wrap">
+    <svg class="scene" id="scene" viewBox="0 0 120 130" aria-hidden="true">
+      <g id="plant"></g>
+      <g class="pot">
+        <path class="pot-body" d="M34 96h52l-6 30a3 3 0 0 1-3 2.4H43a3 3 0 0 1-3-2.4z"/>
+        <rect class="pot-rim" x="30" y="90" width="60" height="9" rx="2.5"/>
+        <ellipse class="soil" id="soil" cx="60" cy="91.5" rx="27" ry="3.2"/>
+      </g>
+      <g class="drops" id="drops"><path d="M48 40q-2.6 4 0 5.2 2.6-1.2 0-5.2z"/><path d="M60 30q-2.6 4 0 5.2 2.6-1.2 0-5.2z"/><path d="M72 38q-2.6 4 0 5.2 2.6-1.2 0-5.2z"/><path d="M55 22q-2.6 4 0 5.2 2.6-1.2 0-5.2z"/><path d="M66 18q-2.6 4 0 5.2 2.6-1.2 0-5.2z"/></g>
+    </svg>
+  </div>
+  <div class="foot">
+    <span class="mood" id="mood"></span>
+    <button class="w-btn is-primary water" id="water" type="button"></button>
+  </div>
+  <script src="main.js"></script>
+</body>
+</html>

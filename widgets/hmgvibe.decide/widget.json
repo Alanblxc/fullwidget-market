@@ -1,0 +1,29 @@
+{
+  "id": "hmgvibe.decide",
+  "name": { "zh-TW": "抽籤", "zh-CN": "抽签", "en": "Decide" },
+  "description": {
+    "zh-TW": "拿不定主意就點一下：從你的清單裏抽一個（今天吃什麼？），擲骰子，或拋硬幣。",
+    "zh-CN": "拿不定主意就点一下：从你的清单里抽一个（今天吃什么？），掷骰子，或抛硬币。",
+    "en": "Can't decide? Tap: draw from your own list (what's for lunch?), roll dice or flip a coin."
+  },
+  "version": "1.0.0",
+  "author": "hmgvibe",
+  "entry": "index.html",
+  "icon": "icon.svg",
+  "category": "other",
+  "preview": "preview/{theme}.{lang}.webp",
+  "size": { "width": 240, "height": 200, "minWidth": 170, "minHeight": 150, "maxWidth": 500, "maxHeight": 420, "grow": 1 },
+  "permissions": [],
+  "settings": [
+    { "key": "mode", "type": "select", "label": { "zh-TW": "玩法", "zh-CN": "玩法", "en": "Mode" }, "default": "draw",
+      "options": [
+        { "value": "draw", "label": { "zh-TW": "抽籤", "zh-CN": "抽签", "en": "Draw" } },
+        { "value": "dice", "label": { "zh-TW": "骰子", "zh-CN": "骰子", "en": "Dice" } },
+        { "value": "coin", "label": { "zh-TW": "硬幣", "zh-CN": "硬币", "en": "Coin" } }
+      ] },
+    { "key": "items", "type": "textarea", "label": { "zh-TW": "籤（一行一個）", "zh-CN": "签（一行一个）", "en": "Choices (one per line)" },
+      "default": { "zh-TW": "火鍋\n牛肉麵\n便當\n滷肉飯\n壽司\n拉麵", "zh-CN": "火锅\n面条\n饺子\n麻辣烫\n米饭套餐\n寿司", "en": "Pizza\nSushi\nTacos\nRamen\nSalad\nBurger" } },
+    { "key": "dice", "type": "select", "label": { "zh-TW": "骰子數量", "zh-CN": "骰子数量", "en": "Number of dice" }, "default": "2",
+      "options": [ { "value": "1", "label": "1" }, { "value": "2", "label": "2" }, { "value": "3", "label": "3" } ] }
+  ]
+}

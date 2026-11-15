@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <svg class="map" id="map" viewBox="0 6 360 144" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <defs><clipPath id="frame"><rect x="0" y="6" width="360" height="144" rx="4"/></clipPath></defs>
+    <g clip-path="url(#frame)">
+      <rect class="sea" x="0" y="6" width="360" height="144"/>
+      <path class="land" id="land"/>
+      <path class="night n1" id="n1"/>
+      <path class="night n2" id="n2"/>
+      <path class="night n3" id="n3"/>
+      <g id="pins"></g>
+      <g class="sun" id="sun"><circle r="5.5" class="glow"/><circle r="2.6"/></g>
+    </g>
+  </svg>
+  <div class="cities" id="cities"></div>
+  <script src="land.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

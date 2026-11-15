@@ -6,7 +6,7 @@
     "zh-CN": "游戏帧率、显卡使用率、显存、温度，加上 CPU 和内存。要搭配官方插件“性能数据”。",
     "en": "Game frame rate, GPU load, video memory and temperature, plus CPU and memory. Works with the official Performance data plugin."
   },
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "hmgvibe",
   "entry": "index.html",
   "icon": "icon.svg",
@@ -15,6 +15,9 @@
   "size": { "width": 330, "height": 190, "minWidth": 200, "minHeight": 120, "maxWidth": 720, "maxHeight": 480, "grow": 1 },
   "permissions": ["system", "plugin:fullwidget.perf"],
   "settings": [
+    { "key": "app", "type": "text", "label": { "zh-TW": "顯示哪個軟體的幀率", "zh-CN": "显示哪个软件的帧率", "en": "Frame rate of" },
+      "description": { "zh-TW": "程式名稱，例如 eldenring；* 是前景的軟體。在組件上點軟體名稱也能選。", "zh-CN": "程序名，例如 eldenring；* 是前台的软件。在组件上点软件名也能选。", "en": "The program's name, e.g. eldenring; * for the one in front. Or click the name on the widget to choose." },
+      "default": "" },
     { "key": "system", "type": "toggle", "label": { "zh-TW": "顯示 CPU 和記憶體", "zh-CN": "显示 CPU 和内存", "en": "Show CPU and memory" }, "default": true },
     { "key": "sensors", "type": "toggle", "label": { "zh-TW": "顯示溫度和功耗（NVIDIA）", "zh-CN": "显示温度和功耗（NVIDIA）", "en": "Show temperature and power (NVIDIA)" }, "default": true }
   ]

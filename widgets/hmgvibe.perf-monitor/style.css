@@ -10,7 +10,32 @@ body { container-type: size; }
 .perf.low .fps .w-display { color: var(--w-warn); }
 .fps .w-display.none { color: var(--w-fg-faint); }
 .fps .unit { font-weight: 600; letter-spacing: 0.06em; }
-.app { margin-top: 0.3rem; font-size: 0.75rem; color: var(--w-fg-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-height: 1.2em; }
+/* the program whose frame rate this is: click to choose another */
+.app {
+  align-self: flex-start; max-width: 100%; display: inline-flex; align-items: center; gap: 0.2rem; margin: 0.25rem 0 0 -0.35rem; padding: 0.1rem 0.35rem;
+  border: 0; border-radius: 6px; background: none; color: var(--w-fg-muted); font: 0.75rem/1.3 var(--w-font); cursor: pointer; min-height: 1.4em;
+}
+.app span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.app svg { width: 0.7rem; height: 0.7rem; flex: none; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; opacity: 0.7; }
+.app:hover { background: var(--w-hover); color: var(--w-fg); }
+.app.unset { color: var(--w-accent); }
+
+.menu {
+  position: fixed; z-index: 10; min-width: 11rem; max-width: 16rem; max-height: 80vh; overflow-y: auto; padding: 0.3rem; border-radius: 10px;
+  background: var(--w-bg-solid); box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35), inset 0 0 0 1px var(--w-border); display: flex; flex-direction: column;
+}
+.menu[hidden] { display: none; }
+.menu .mh { padding: 0.3rem 0.6rem 0.2rem; font-size: 0.7rem; color: var(--w-fg-muted); }
+.menu .mn { padding: 0.3rem 0.6rem 0.4rem; font-size: 0.75rem; line-height: 1.45; color: var(--w-fg-muted); }
+.menu button {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 0.8rem; text-align: left; padding: 0.38rem 0.6rem; border: 0; border-radius: 6px;
+  background: none; color: var(--w-fg); font: 0.8rem/1.3 var(--w-font); cursor: pointer; outline: none;
+}
+.menu button span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.menu button small { flex: none; font-size: 0.72rem; color: var(--w-fg-muted); font-variant-numeric: tabular-nums; }
+.menu button:hover, .menu button:focus-visible { background: var(--w-hover); }
+.menu button.on { color: var(--w-accent); }
+.menu hr { border: 0; height: 1px; margin: 0.25rem 0.3rem; background: var(--w-rule); }
 .spark { flex: 1; width: 100%; min-height: 14px; max-height: 64px; margin-top: 0.45rem; overflow: visible; }
 /* values change every second: no transitions, or the card would be animating all the time */
 .spark .s0 { stop-color: var(--w-accent); stop-opacity: 0.3; }

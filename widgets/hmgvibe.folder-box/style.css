@@ -1,0 +1,88 @@
+body { display: flex; flex-direction: column; gap: 0.55rem; padding-bottom: calc(var(--w-padding) * 0.6); }
+
+/* the folder's name, and where we are inside it */
+.head { display: flex; align-items: center; gap: 0.35rem; min-height: 1.6rem; }
+.head[hidden] { display: none; }
+.back {
+  flex: none; width: 1.6rem; height: 1.6rem; display: grid; place-items: center; padding: 0; border: 0; border-radius: 8px;
+  background: var(--w-control-bg); color: var(--w-fg); cursor: pointer;
+}
+.back:hover { background: var(--w-hover); }
+.back[hidden] { display: none; }
+.back svg, .setup svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.crumbs { flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.15rem; overflow: hidden; white-space: nowrap; }
+.crumb {
+  min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; padding: 0.1rem 0.3rem; border: 0; border-radius: 6px;
+  background: none; color: var(--w-fg-muted); font: 600 0.86rem/1.3 var(--w-font-title); cursor: pointer;
+}
+.crumb:last-child { color: var(--w-fg); flex-shrink: 0; max-width: 70%; }
+.crumb:first-child:last-child { padding-left: 0; max-width: 100%; }
+.crumb:hover { background: var(--w-hover); color: var(--w-fg); }
+.crumb[hidden], .sep[hidden] { display: none; }
+.sep { color: var(--w-fg-faint); font-size: 0.8rem; flex: none; }
+.count { flex: none; font-variant-numeric: tabular-nums; }
+.count.err { color: var(--w-danger); max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* the files */
+.box { position: relative; flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; outline: none; margin: 0 calc(var(--w-padding) * -0.4); padding: 0 calc(var(--w-padding) * 0.4); }
+.box::-webkit-scrollbar { width: 6px; }
+.box::-webkit-scrollbar-thumb { border-radius: 3px; background: var(--w-fg-faint); }
+.box::-webkit-scrollbar-thumb:hover { background: var(--w-fg-muted); }
+.box::-webkit-scrollbar-track, .box::-webkit-scrollbar-button { display: none; background: none; }
+.box[hidden] { display: none; }
+.items { display: grid; grid-template-columns: repeat(auto-fill, minmax(calc(var(--icon) + 2.6rem), 1fr)); gap: 0.2rem; align-content: start; }
+.item {
+  display: flex; flex-direction: column; align-items: center; gap: 0.3rem; padding: 0.45rem 0.25rem 0.4rem; border-radius: 10px;
+  cursor: default; user-select: none; min-width: 0;
+}
+.item:hover { background: var(--w-hover); }
+.item.sel { background: color-mix(in srgb, var(--w-accent) 20%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--w-accent) 45%, transparent); }
+.item.into { background: color-mix(in srgb, var(--w-accent) 30%, transparent); box-shadow: inset 0 0 0 1.5px var(--w-accent); }
+.ic { width: var(--icon); height: var(--icon); display: grid; place-items: center; flex: none; }
+.ic img { max-width: 100%; max-height: 100%; object-fit: contain; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.25)); }
+.nm {
+  width: 100%; text-align: center; font-size: 0.75rem; line-height: 1.3; color: var(--w-fg); text-shadow: var(--w-text-shadow);
+  overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: break-word;
+}
+.item.sel .nm { -webkit-line-clamp: 4; }
+.rn { width: 100%; font-size: 0.75rem; padding: 0.15rem 0.3rem; text-align: center; }
+
+/* list view */
+[data-view="list"] .items { grid-template-columns: 1fr; gap: 1px; }
+[data-view="list"] .item { flex-direction: row; gap: 0.55rem; padding: 0.3rem 0.45rem; border-radius: 7px; }
+[data-view="list"] .nm { text-align: left; -webkit-line-clamp: 1; font-size: 0.8rem; }
+[data-view="list"] .rn { text-align: left; }
+
+.note { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 1rem; font-size: 0.8rem; color: var(--w-fg-muted); pointer-events: none; }
+.note[hidden] { display: none; }
+
+/* files dragged over the box */
+.drop {
+  position: absolute; inset: 2px; display: grid; place-items: end center; padding-bottom: 0.6rem; pointer-events: none; opacity: 0;
+  border-radius: 12px; border: 1.5px dashed var(--w-accent); background: color-mix(in srgb, var(--w-accent) 8%, transparent);
+}
+.drop span { padding: 0.25rem 0.7rem; border-radius: 99px; background: var(--w-accent); color: var(--w-on-accent); font-size: 0.75rem; font-weight: 600; }
+.dropping .drop { opacity: 1; }
+.dragging-out .drop { display: none; }
+
+/* no folder yet, no plugin, folder gone */
+.setup { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.4rem; text-align: center; padding: 0.5rem; }
+.setup[hidden] { display: none; }
+.setup svg { width: 2rem; height: 2rem; color: var(--w-accent); stroke-width: 1.5; margin-bottom: 0.2rem; }
+.setup b { font: 600 0.95rem/1.35 var(--w-font-title); }
+.setup span { font-size: 0.78rem; line-height: 1.45; color: var(--w-fg-muted); word-break: break-all; }
+.setup .w-btn { margin-top: 0.35rem; }
+
+/* the right-click menu, drawn here in the theme's colours */
+.menu {
+  position: fixed; z-index: 10; min-width: 9.5rem; padding: 0.3rem; border-radius: 10px; background: var(--w-bg-solid);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35), inset 0 0 0 1px var(--w-border); display: flex; flex-direction: column;
+}
+.menu[hidden] { display: none; }
+.menu button {
+  text-align: left; padding: 0.38rem 0.6rem; border: 0; border-radius: 6px; background: none; color: var(--w-fg);
+  font: 0.8rem/1.3 var(--w-font); cursor: pointer; white-space: nowrap; outline: none;
+}
+.menu button:hover, .menu button:focus-visible { background: var(--w-hover); }
+.menu button.danger { color: var(--w-danger); }
+.menu hr { border: 0; height: 1px; margin: 0.25rem 0.3rem; background: var(--w-rule); }

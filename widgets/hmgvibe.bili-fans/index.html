@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="who">
+    <span class="face" id="face"></span>
+    <span class="name" id="name"></span>
+  </div>
+  <div class="main">
+    <div class="num">
+      <span class="w-label" id="label"></span>
+      <span class="w-display" id="fans">–</span>
+      <span class="delta" id="delta"></span>
+    </div>
+    <svg class="spark" id="spark" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+      <defs><linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop class="s0" offset="0"/><stop class="s1" offset="1"/></linearGradient></defs>
+      <path class="area" id="area" fill="url(#fade)"/><path class="line" id="line"/>
+    </svg>
+  </div>
+  <div class="msg" id="msg" hidden></div>
+  <script src="main.js"></script>
+</body>
+</html>

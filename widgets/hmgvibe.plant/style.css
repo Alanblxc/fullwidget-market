@@ -1,0 +1,28 @@
+body { display: flex; flex-direction: column; gap: 0.3rem; }
+.top { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; }
+.name { font: 600 0.95rem/1.3 var(--w-font-title); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.pot-wrap { position: relative; flex: 1; min-height: 0; }
+.scene { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.pot-body { fill: #c4704a; }
+.pot-rim { fill: #d98560; }
+#plant { transform-origin: 60px 91px; }
+
+/* watering: drops fall, the plant gives a little shake */
+.drops path { fill: #6cc4ff; opacity: 0; }
+.watering .drops path { animation: drop 0.9s ease-in forwards; }
+.watering .drops path:nth-child(2) { animation-delay: 0.12s; }
+.watering .drops path:nth-child(3) { animation-delay: 0.22s; }
+.watering .drops path:nth-child(4) { animation-delay: 0.3s; }
+.watering .drops path:nth-child(5) { animation-delay: 0.38s; }
+@keyframes drop { 0% { opacity: 0; transform: translateY(-6px); } 15% { opacity: 0.9; } 100% { opacity: 0; transform: translateY(46px); } }
+.watering #plant { animation: perk 1.2s ease-out 0.5s; }
+@keyframes perk { 0% { transform: scale(1); } 30% { transform: scale(1.04, 0.97); } 60% { transform: scale(0.98, 1.02); } 100% { transform: scale(1); } }
+
+.foot { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.mood { font-size: 0.76rem; line-height: 1.35; color: var(--w-fg-muted); min-width: 0; }
+.mood.t2 { color: var(--w-warn); }
+.mood.t3 { color: var(--w-danger); }
+.water { flex: none; padding: 0.3rem 0.85rem; font-size: 0.78rem; }
+.water:disabled { opacity: 0.7; cursor: default; }
+@media (prefers-reduced-motion: reduce) { .watering .drops path, .watering #plant { animation: none; } }

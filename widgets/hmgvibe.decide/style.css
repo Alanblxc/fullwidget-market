@@ -1,0 +1,49 @@
+body { display: flex; flex-direction: column; gap: 0.35rem; }
+
+.stage {
+  flex: 1; min-height: 0; width: 100%; padding: 0.4rem; border: 0; border-radius: calc(var(--w-radius) * 0.6);
+  background: var(--w-control-bg); color: inherit; cursor: pointer; display: grid; place-items: center; container-type: size;
+}
+.stage:hover { background: var(--w-hover); }
+.result { display: grid; place-items: center; max-width: 100%; }
+.tapwrap { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+.tapwrap .die { --d: min(30cqh, 22cqw); }
+.tapwrap .coin { --d: min(36cqh, 30cqw); }
+.idle { opacity: 0.55; }
+.q { font: 300 min(40cqh, 3rem)/1 var(--w-font-display); color: var(--w-fg-faint); }
+.tap, .empty { font-size: 0.85rem; color: var(--w-fg-muted); text-align: center; line-height: 1.45; }
+
+.pick { font: 600 clamp(1.2rem, 26cqh, 2.6rem)/1.15 var(--w-font-title); text-align: center; word-break: break-word; overflow-wrap: anywhere; }
+.rolling .pick { color: var(--w-fg-muted); }
+
+.dice { display: flex; gap: 0.6rem; }
+.die {
+  --d: min(46cqh, 26cqw);
+  width: var(--d); height: var(--d); padding: calc(var(--d) * 0.14); border-radius: calc(var(--d) * 0.2);
+  background: var(--w-fg); display: grid; grid-template: repeat(3, 1fr) / repeat(3, 1fr); place-items: center;
+  box-shadow: inset 0 calc(var(--d) * -0.05) 0 rgba(0, 0, 0, 0.18);
+}
+.die i { width: 62%; height: 62%; border-radius: 50%; }
+.die i.on { background: var(--w-bg-solid); }
+.rolling .die { transform: rotate(calc((var(--r, 1) * 8deg))); }
+.rolling .die:nth-child(2) { --r: -1; }
+
+.coin {
+  --d: min(60cqh, 50cqw);
+  width: var(--d); height: var(--d); border-radius: 50%; display: grid; place-items: center;
+  background: radial-gradient(circle at 35% 30%, #ffe9a6, #e9b740 60%, #c18d22);
+  box-shadow: inset 0 0 0 calc(var(--d) * 0.05) rgba(255, 255, 255, 0.35), inset 0 calc(var(--d) * -0.04) 0 rgba(0, 0, 0, 0.18);
+  color: #6b4a0e;
+}
+.coin b { font: 700 calc(var(--d) * 0.24) / 1 var(--w-font-title); }
+.coin.tails { background: radial-gradient(circle at 35% 30%, #f0f0f0, #c9ced6 60%, #9aa1ab); color: #3b4048; }
+.rolling .coin { transform: scaleX(0.35); }
+
+.land { animation: land 0.32s cubic-bezier(0.2, 1.4, 0.4, 1); }
+@keyframes land { from { transform: scale(0.82); opacity: 0.4; } to { transform: scale(1); opacity: 1; } }
+
+.foot { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; min-height: 1.2rem; }
+.history { display: flex; gap: 0.3rem; min-width: 0; overflow: hidden; }
+.history span { font-size: 0.7rem; padding: 0.05rem 0.45rem; border-radius: 99px; background: var(--w-control-bg); color: var(--w-fg-muted); white-space: nowrap; }
+.hint { font-size: 0.75rem; color: var(--w-fg-muted); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .land { animation: none; } }

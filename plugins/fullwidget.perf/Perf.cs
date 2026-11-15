@@ -441,6 +441,22 @@ public static class FwPerf
                 r["title"] = sb.ToString();
             }
             else r["state"] = "idle"; // the program in front isn't drawing with Direct3D
+            // every program drawing frames this second, busiest first, so a widget can show the one
+            // the user chose rather than the one in front: [{ process, name, value }], one per program
+            var byName = new Dictionary<string, Dictionary<string, object>>(StringComparer.OrdinalIgnoreCase);
+            foreach (var kv in c)
+            {
+                if (kv.Value <= 0) continue;
+                string proc = Name(kv.Key);
+                if (proc.StartsWith("pid ")) continue; // already gone
+                double v = Math.Round(kv.Value / secs);
+                Dictionary<string, object> have;
+                if (byName.TryGetValue(proc, out have) && (double)have["value"] >= v) continue;
+                byName[proc] = new Dictionary<string, object> { { "process", proc }, { "name", Description(kv.Key, proc) }, { "value", v } };
+            }
+            var programs = new List<Dictionary<string, object>>(byName.Values);
+            programs.Sort(delegate (Dictionary<string, object> a, Dictionary<string, object> b) { return ((double)b["value"]).CompareTo((double)a["value"]); });
+            r["programs"] = programs;
             return r;
         }
 
@@ -451,6 +467,28 @@ public static class FwPerf
             try { n = Process.GetProcessById(pid).ProcessName; } catch (ArgumentException) { n = "pid " + pid; }
             if (names.Count > 200) names.Clear();
             return names[pid] = n;
+        }
+
+        static readonly Dictionary<int, string> descriptions = new Dictionary<int, string>();
+
+        /// The program's own name, "ELDEN RING™" rather than "eldenring", when Windows lets us read it
+        /// (an elevated or protected game may not); else the process name.
+        static string Description(int pid, string proc)
+        {
+            string d;
+            if (descriptions.TryGetValue(pid, out d)) return d;
+            d = proc;
+            try
+            {
+                using (var p = Process.GetProcessById(pid))
+                {
+                    string desc = (p.MainModule.FileVersionInfo.FileDescription ?? "").Trim();
+                    if (desc.Length > 1 && desc.Length < 60) d = desc;
+                }
+            }
+            catch (Exception) { /* no access: the process name will do */ }
+            if (descriptions.Count > 200) descriptions.Clear();
+            return descriptions[pid] = d;
         }
 
         /// Adds this user to Performance Log Users (S-1-5-32-559), with Windows asking for the

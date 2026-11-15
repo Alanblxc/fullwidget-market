@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="top"><span class="w-label" id="pattern"></span><span class="w-label" id="today"></span></div>
+  <button class="stage" id="stage" type="button">
+    <svg class="ring" viewBox="0 0 100 100" aria-hidden="true"><circle class="track" cx="50" cy="50" r="47"/><circle class="done" id="done" cx="50" cy="50" r="47" pathLength="100"/></svg>
+    <span class="orb" id="orb"></span>
+    <span class="say"><b id="phase"></b><small class="w-num" id="sec"></small></span>
+  </button>
+  <div class="hint" id="hint"></div>
+  <script src="main.js"></script>
+</body>
+</html>

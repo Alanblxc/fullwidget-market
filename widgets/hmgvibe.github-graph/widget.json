@@ -1,0 +1,20 @@
+{
+  "id": "hmgvibe.github-graph",
+  "name": { "zh-TW": "GitHub 貢獻牆", "zh-CN": "GitHub 贡献墙", "en": "GitHub contributions" },
+  "description": {
+    "zh-TW": "你在 GitHub 上的貢獻格子、過去一年的總數和連續天數。填上用戶名就行，不用登入。",
+    "zh-CN": "你在 GitHub 上的贡献格子、过去一年的总数和连续天数。填上用户名就行，不用登录。",
+    "en": "Your GitHub contribution grid, the year's total and your current streak. Just a username, no sign-in."
+  },
+  "version": "1.0.0",
+  "author": "hmgvibe",
+  "entry": "index.html",
+  "icon": "icon.svg",
+  "category": "info",
+  "preview": "preview/{theme}.{lang}.webp",
+  "size": { "width": 380, "height": 170, "minWidth": 220, "minHeight": 130, "maxWidth": 1000, "maxHeight": 320, "grow": 0.5 },
+  "permissions": ["network:github.com"],
+  "settings": [
+    { "key": "user", "type": "text", "label": { "zh-TW": "GitHub 用戶名", "zh-CN": "GitHub 用户名", "en": "GitHub username" }, "default": "" }
+  ]
+}
