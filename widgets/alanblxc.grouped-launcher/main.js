@@ -3,9 +3,10 @@
   const $ = id => document.getElementById(id), M = LauncherModel;
   const defaults = { title: "分组启动台", showTitle: true, showAll: true, multiRow: false, compactTabs: false, showIcons: true, defaultGrid: true };
   // SDK 在捕获阶段处理右键，通过其官方属性限制菜单区域。
-  document.querySelectorAll("body > :not(header)").forEach(node => node.setAttribute("data-no-menu", ""));
+  document.querySelectorAll(".tabbar, .workspace, .statusbar, #editor, .notice, .error").forEach(node => node.setAttribute("data-no-menu", ""));
   window.addEventListener("contextmenu", event => {
-    if (!event.target.closest?.("header.header")) { event.preventDefault(); event.stopPropagation(); }
+    // 只使用 SDK 的菜单开关，不截断宿主事件，也不修改宿主注入的缩放手柄。
+    document.body.toggleAttribute("data-no-menu", !event.target.closest?.("header.header"));
   }, true);
   let settings = { ...defaults, ...widget.settings.get() };
   let board, ready = false, editing = false, selected = null, dragging = null, undoRecord = null, undoTimer;

@@ -12,7 +12,9 @@
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-body { margin: 0; padding: var(--w-padding, 14px); height: 100vh; min-width: 0; display: flex; flex-direction: column; gap: 8px; color: var(--ink); overflow: hidden; position: relative; }
+body { margin: 0; padding: var(--w-padding, 14px); height: calc(100% / var(--w-size-scale, 1)); min-width: 0; display: flex; flex-direction: column; gap: 8px; color: var(--ink); overflow: hidden; position: relative; }
+/* 与原版 launcher 一样按父容器高度布局，保留宿主 html 阴影边距，再抵消内容缩放。 */
+body:hover .fw-resize { opacity: .8; }
 button, input, select { font: inherit; color: inherit; }
 button { border: 1px solid transparent; border-radius: 5px; padding: 5px 8px; background: transparent; cursor: pointer; transition: background 140ms, border-color 140ms; }
 button:hover { background: color-mix(in srgb, var(--ink) 11%, transparent); }
