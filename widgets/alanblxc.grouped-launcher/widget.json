@@ -6,7 +6,7 @@
     "zh-CN": "用多个分组标签页整理程序、文件夹和网址，单层或多层标签皆可，拖拽即可排序与换组。",
     "en": "Programs, folders and links kept in tabbed groups — one row of tabs or several. Drag to reorder and to move things between groups."
   },
-  "version": "2.0.0",
+  "version": "2.0.1",
   "author": "Alanblxc",
   "entry": "index.html",
   "icon": "icon.svg",
